@@ -1,8 +1,43 @@
 #include "Application.h"
 
+int Application::Run() 
+{
+	int startupRet = Startup();
+	if (startupRet != 0) 
+	{
+		return startupRet;
+	}
+
+	int mainRet = MainLoop();
+	if (mainRet != 0) 
+	{
+		return mainRet;
+	}
+
+	int shutdownRet = Shutdown();
+	if (shutdownRet != 0) 
+	{
+		return shutdownRet;
+	}
+	return 0;
+}
+
 int Application::Startup()
 {
+	spdlog::set_level(spdlog::level::debug);
+	spdlog::set_pattern("[%H:%M:%S] [%n] [%^%L%$] [thread %t] %v");
+
+	spdlog::info("Application Startup");
+
+	//spdlog::trace("test logging");
+	//spdlog::info("test logging");
+	//spdlog::debug("test logging");
+	//spdlog::warn("test logging");
+	//spdlog::error("test logging");
+	//spdlog::critical("test logging");
+
 	if (glfwInit() != GLFW_TRUE) {
+		spdlog::critical("glfwInit Failure");
 		return 1;
 	}
 
@@ -15,6 +50,8 @@ int Application::Startup()
 
 	// initialise vulkan
 	{
+		spdlog::info("initialising vulkan");
+
 		VkApplicationInfo applicationInfo = {
 			.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
 			.pNext = nullptr,
@@ -54,23 +91,31 @@ int Application::Startup()
 
 	}
 
+	spdlog::info("Application Startup Complete");
 	return 0;
 }
 
 int Application::MainLoop()
 {
+	spdlog::info("Application Mainloop");
+
 	while (!glfwWindowShouldClose(AppState.Window)) {
 		glfwPollEvents();
 	}
 
+	spdlog::info("Application Mainloop Complete");
 	return 0;
 }
 
 int Application::Shutdown()
 {
-	//vkDestroyInstance(AppState.VkState.Instance, AppState.VkState.Allocator);
+	spdlog::info("Application Shutdown");
+
+	vkDestroyInstance(AppState.VkState.Instance, AppState.VkState.Allocator);
 
 	glfwDestroyWindow(AppState.Window);
 	glfwTerminate();
+
+	spdlog::info("Application Shutdown Complete");
     return 0;
 }

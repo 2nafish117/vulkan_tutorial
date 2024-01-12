@@ -28,23 +28,7 @@ public:
 
 	}
 
-	int Run() {
-		int startupRet = Startup();
-		if (startupRet != 0) {
-			return startupRet;
-		}
-
-		int mainRet = MainLoop();
-		if (mainRet != 0) {
-			return mainRet;
-		}
-
-		int shutdownRet = Shutdown();
-		if (shutdownRet != 0) {
-			return shutdownRet;
-		}
-		return 0;
-	}
+	int Run();
 public:
 
 private:
