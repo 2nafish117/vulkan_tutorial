@@ -13,8 +13,9 @@ struct ApplicationState {
 	const char* const Name = "Vulkan Tutorial";
 	
 	struct VulkanState {
-		VkAllocationCallbacks* Allocator = nullptr;
 		VkInstance Instance = 0;
+		VkAllocationCallbacks* Allocator = nullptr;
+		VkDebugUtilsMessengerEXT DebugMessenger = 0;
 	} VkState;
 };
 
@@ -32,9 +33,18 @@ public:
 public:
 
 private:
+	// application lifecycle
 	int Startup();
 	int MainLoop();
 	int Shutdown();
+
+	// vulkan stuff
+	int InitVulkan();
+	int DeInitVulkan();
+
+	int CreateInstance();
+	bool CheckRequiredLayerSupport(std::vector<const char*>& requiredLayers);
+	bool CheckRequiredExtensionSupport(std::vector<const char*>& requiredExtensions);
 
 private:
 	ApplicationState AppState;
